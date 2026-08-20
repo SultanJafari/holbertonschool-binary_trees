@@ -1,59 +1,56 @@
 #include "binary_trees.h"
 
 /**
- * depth - Measures the depth of a leaf node in a binary tree
- * @tree: Pointer to the node
+ * tree_is_perfect - Helper function that checks if a binary tree is perfect
+ * @tree: Pointer to the root node of the tree to check
+ * @depth: Depth of the tree
+ * @level: Current level in the tree
  *
- * Return: The depth of the leaf
+ * Return: 1 if the tree is perfect, 0 otherwise
  */
-static size_t depth(const binary_tree_t *tree)
+int tree_is_perfect(const binary_tree_t *tree, size_t depth, size_t level)
 {
-	size_t d = 0;
+	if (tree->left == NULL && tree->right == NULL)
+		return (depth == level + 1);
 
-	while (tree)
-	{
-		d++;
-		tree = tree->left;
-	}
-	return (d);
+	if (tree->left == NULL || tree->right == NULL)
+		return (0);
+
+	return (tree_is_perfect(tree->left, depth, level + 1) &&
+		tree_is_perfect(tree->right, depth, level + 1));
 }
 
 /**
- * is_perfect - Recursive helper to check if a tree is perfect
- * @tree: Pointer to the root node
- * @d: The depth of the leftmost leaf
- * @level: Current level
+ * get_depth - Measures the depth of a binary tree
+ * @tree: Pointer to the root node to measure the depth
  *
- * Return: 1 if perfect, 0 otherwise
+ * Return: Depth of the tree
  */
-static int is_perfect(const binary_tree_t *tree, size_t d, size_t level)
+size_t get_depth(const binary_tree_t *tree)
 {
-	if (!tree)
-		return (1);
+	size_t depth = 0;
 
-	/* Check if it is a leaf */
-	if (!tree->left && !tree->right)
-		return (d == level + 1);
-
-	/* If one child is missing, it's not perfect */
-	if (!tree->left || !tree->right)
-		return (0);
-
-	/* Recurse for both subtrees */
-	return (is_perfect(tree->left, d, level + 1) &&
-		is_perfect(tree->right, d, level + 1));
+	while (tree != NULL)
+	{
+		depth++;
+		tree = tree->left;
+	}
+	return (depth);
 }
 
 /**
  * binary_tree_is_perfect - Checks if a binary tree is perfect
  * @tree: Pointer to the root node of the tree to check
  *
- * Return: 1 if perfect, 0 otherwise. If tree is NULL, return 0.
+ * Return: 1 if the tree is perfect, 0 otherwise. If tree is NULL, return 0.
  */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	if (!tree)
+	size_t depth;
+
+	if (tree == NULL)
 		return (0);
 
-	return (is_perfect(tree, depth(tree), 0));
+	depth = get_depth(tree);
+	return (tree_is_perfect(tree, depth, 0));
 }
