@@ -50,5 +50,6 @@ binary_tree_t *binary_tree_uncle(binary_tree_t *node);
 static size_t depth(...);
 static size_t depth(const binary_tree_t *tree);
 static size_t depth(...);
+int binary_tree_is_perfect(const binary_tree_t *tree);
 
 #endif
